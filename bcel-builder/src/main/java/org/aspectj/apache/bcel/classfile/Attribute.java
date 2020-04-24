@@ -108,18 +108,15 @@ public abstract class Attribute implements Cloneable, Node, Serializable {
 
 	// OPTIMIZE how about just reading them in and storing them until we need to decode what they really are?
 	public static final Attribute readAttribute(DataInputStream file, ConstantPool cpool) throws IOException {
-		byte tag = Constants.ATTR_UNKNOWN;
 		int idx = file.readUnsignedShort();
 		String name = cpool.getConstantUtf8(idx).getValue();
 		int len = file.readInt();
 
-		// Compare strings to find known attribute
-		for (byte i = 0; i < Constants.KNOWN_ATTRIBUTES; i++) {
-			if (name.equals(Constants.ATTRIBUTE_NAMES[i])) {
-				tag = i;
-				break;
-			}
-		}
+		byte tag = Constants.ATTRIBUTE_NAMES_INDEX.getOrDefault(name, Constants.ATTR_UNKNOWN);
+		return createAttribute(file, cpool, idx, len, tag);
+	}
+
+	private static Attribute createAttribute(DataInputStream file, ConstantPool cpool, int idx, int len, byte tag) throws IOException {
 		switch (tag) {
 		case Constants.ATTR_UNKNOWN:
 			return new Unknown(idx, len, file, cpool);

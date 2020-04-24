@@ -2,6 +2,10 @@ package org.aspectj.apache.bcel;
 
 import org.aspectj.apache.bcel.generic.Type;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 /* ====================================================================
  * The Apache Software License, Version 1.1
  *
@@ -673,6 +677,9 @@ public interface Constants {
 		"AnnotationDefault","BootstrapMethods", "RuntimeVisibleTypeAnnotations", "RuntimeInvisibleTypeAnnotations",
 		"MethodParameters", "Module", "ModulePackages", "ModuleMainClass", "NestHost", "NestMembers"
 		};
+
+	public static final Map<String, Byte> ATTRIBUTE_NAMES_INDEX = IntStream.range(0, ATTRIBUTE_NAMES.length)
+			.boxed().collect(Collectors.toMap(i -> ATTRIBUTE_NAMES[i], Integer::byteValue));
 
 	/**
 	 * Constants used in the StackMap attribute.
